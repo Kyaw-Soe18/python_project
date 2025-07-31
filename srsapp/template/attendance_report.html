@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="card mt-3 p-3">
+    <form method="get">
+        <div class="form-group">
+            <label>Enter YKPT Number:</label>
+            <input type="text" name="ykpt" class="form-control" placeholder="Enter YKPT..." required>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Search</button>
+    </form>
+</div>
+
+{% if student %}
+<div class="card mt-4 p-3">
+    <h4>Attendance for {{ student.name }} ({{ student.roll_number }})</h4>
+    <p>Course: {{ student.course.course_name }}</p>
+
+    {% for week in weeks %}
+        <h5>{{ week }}</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Day</th>
+                        {% for subject in subjects %}
+                            <th>{{ subject }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in days %}
+                        <tr>
+                            <td>{{ day }}</td>
+                            {% for subject in subjects %}
+                                <td>
+                                    <select class="form-control">
+                                        <option value="present">Present</option>
+                                        <option value="absent">Absent</option>
+                                    </select>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Student Attendance Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        th, td { border: 1px solid #999; padding: 8px; text-align: center; }
+        select { width: 100%; padding: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Search Student Attendance by YKPT Number</h2>
+    <form method="get" action="">
+        <label>Enter YKPT Number:</label>
+        <input type="text" name="ykpt" required value="{{ request.GET.ykpt|default:'' }}">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if student %}
+        <h3>Student Info</h3>
+        <p><strong>Name:</strong> {{ student.fname }}</p>
+        <p><strong>YKPT Number:</strong> {{ student.roll_number }}</p>
+        <p><strong>Course:</strong> {{ student.course_id.coursefullname }}</p>
+
+        {% for week in weeks %}
+            <h4>{{ week }} Attendance</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        {% for subject in subjects %}
+                            <th>{{ subject }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in days %}
+                    <tr>
+                        <td>{{ day }}</td>
+                        {% for subject in subjects %}
+                        <td>
+                            <select name="attendance_{{ week }}_{{ day }}_{{ subject }}">
+                                <option value="Present">Present</option>
+                                <option value="Absent">Absent</option>
+                            </select>
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    {% elif request.GET.ykpt %}
+        <p style="color:red;">Student with YKPT number "{{ request.GET.ykpt }}" not found.</p>
+    {% endif %}
+</body>
+</html>
